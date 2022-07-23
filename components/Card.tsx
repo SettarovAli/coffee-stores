@@ -5,14 +5,15 @@ import cls from 'classnames';
 import styles from './Card.module.css';
 
 interface ICardProps {
+  className: string;
   name: string;
   imgUrl: string;
   href: string;
 }
 
-const Card = ({ name, imgUrl, href }: ICardProps) => {
+const Card = ({ className, name, imgUrl, href }: ICardProps) => {
   return (
-    <Link href={href}>
+    <Link className={className} href={href}>
       <a className={styles.cardLink}>
         <div className={cls('glass', styles.container)}>
           <div className={styles.cardHeaderWrapper}>

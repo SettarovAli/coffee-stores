@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { InferGetStaticPropsType, NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 
@@ -9,7 +9,17 @@ import heroImage from '../public/static/hero-image.png';
 
 import styles from '../styles/Home.module.css';
 
-const Home: NextPage = () => {
+import coffeeStoresData from '../data/coffee-stores.json';
+
+export async function getStaticProps() {
+  return {
+    props: { coffeeStores: coffeeStoresData },
+  };
+}
+
+const Home = ({
+  coffeeStores,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const handleOnBannerBtnClick = () => {
     console.log('Button clicked');
   };
@@ -30,11 +40,22 @@ const Home: NextPage = () => {
         <div className={styles.heroImage}>
           <Image src={heroImage} alt="Hero image" width={700} height={400} />
         </div>
-        <Card
-          name="DarkHorse Coffee"
-          href="/coffee-store/darkhorse-coffee"
-          imgUrl="/static/hero-image.png"
-        />
+        {coffeeStores.length !== 0 && (
+          <>
+            <h2 className={styles.heading2}>Toronto stores</h2>
+            <div className={styles.cardLayout}>
+              {coffeeStores.map((coffeeStore) => (
+                <Card
+                  key={coffeeStore.id}
+                  className={styles.card}
+                  name={coffeeStore.name}
+                  href={`/coffee-store/${coffeeStore.id}`}
+                  imgUrl={coffeeStore.imgUrl}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
