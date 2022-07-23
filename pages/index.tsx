@@ -9,9 +9,22 @@ import heroImage from '../public/static/hero-image.png';
 
 import styles from '../styles/Home.module.css';
 
-import coffeeStoresData from '../data/coffee-stores.json';
-
 export async function getStaticProps() {
+  const coffeeStoresData = await fetch(
+    'https://api.foursquare.com/v3/places/search?query=coffee&ll=43.653833032607096%2C-79.37896808855945&limit=6',
+    {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: process.env.FOURSQUARE_API_KEY!,
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((data) => data.results);
+
+  console.log(coffeeStoresData);
+
   return {
     props: { coffeeStores: coffeeStoresData },
   };
@@ -50,7 +63,10 @@ const Home = ({
                   className={styles.card}
                   name={coffeeStore.name}
                   href={`/coffee-store/${coffeeStore.id}`}
-                  imgUrl={coffeeStore.imgUrl}
+                  imgUrl={
+                    coffeeStore.imgUrl ||
+                    'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'
+                  }
                 />
               ))}
             </div>
